@@ -1,0 +1,41 @@
+{
+  "name": "jquery.background-parallax-scroll",
+  "version": "0.1.0",
+  "author": "inc2734",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/inc2734/jquery.background-parallax-scroll"
+  },
+  "main": "src/jquery.background-parallax-scroll.js",
+  "files": [
+    "src",
+    "dist",
+    "package.json",
+    "gulpfile.js",
+    "LICENSE",
+    "README.md",
+    "yarn.lock"
+  ],
+  "devDependencies": {
+    "babel-preset-es2015-rollup": "^3.0.0",
+    "babel-core": "^6.26.0",
+    "gulp": "^3.9.1",
+    "gulp-plumber": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-rollup": "^2.15.0",
+    "gulp-uglify": "^3.0.0",
+    "gulp-zip": "^4.0.0",
+    "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-commonjs": "^8.2.1",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "browser-sync": "^2.18.13",
+    "gulp-rename": "^1.2.2"
+  },
+  "scripts": {
+    "gulp": "gulp",
+    "prepublish": "gulp build",
+    "build": "gulp build",
+    "start": "gulp"
+  }
+}
