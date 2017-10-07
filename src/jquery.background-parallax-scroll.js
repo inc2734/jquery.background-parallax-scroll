@@ -39,11 +39,13 @@ import $ from 'jquery';
       }
 
       function setPosition(scroll) {
-        scroll = parseInt(scroll);
-        const offset   = target.offset().top;
-        const parallax = ((scroll - offset) / params.speed);
-        const newBpy   = `calc(${bpy} - ${parallax}px)`;
-        target.css('background-position-y', newBpy);
+        if ('fixed' === target.css('background-attachment')) {
+          scroll = parseInt(scroll);
+          const offset   = target.offset().top;
+          const parallax = ((scroll - offset) / params.speed);
+          const newBpy   = `calc(${bpy} - ${parallax}px)`;
+          target.css('background-position-y', newBpy);
+        }
       }
     });
   }
