@@ -1,0 +1,27 @@
+.js-bg-parallax {
+  position: relative;
+  overflow: hidden !important;
+
+  &__bg {
+    max-width: none !important;
+    max-height: none !important;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity .1s;
+    object-fit: cover;
+    object-position: 50% 50%;
+
+    &--loaded {
+      height: auto;
+      width: auto;
+      opacity: 1;
+    }
+  }
+
+  &__content {
+    position: relative;
+  }
+}

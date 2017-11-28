@@ -12,6 +12,7 @@ $ yarn add jquery.background-parallax-scroll
 ```
 <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
 <script src="/node_modules/jquery.background-parallax-scroll/dist/jquery.background-parallax-scroll.min.js"></script>
+<link rel="stylesheet" href="/node_modules/jquery.background-parallax-scroll/dist/jquery.background-parallax-scroll.min.css">
 ```
 
 ### Setting
@@ -28,16 +29,12 @@ jQuery(function($) {
 </script>
 ```
 ```
-.hero {
-  background-image: url(...);
-  background-size: cover;
-  background-position: 50% 50%;
-  background-repeat: no-repeat;
-
-  @media (min-width: 1024px) {
-    background-attachment: fixed;
-  }
-}
+<div class="hero js-bg-parallax">
+  <img src="/path/to/bg.jpg" class="js-bg-parallax__bg" alt="">
+  <div class="js-bg-parallax__content">
+    Contents
+  </div>
+</div>
 ```
 
 ## License

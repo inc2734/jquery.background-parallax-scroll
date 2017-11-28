@@ -5,7 +5,10 @@
  */
 var gulp         = require('gulp');
 var rename       = require('gulp-rename');
-var zip          = require('gulp-zip');
+var sass         = require('gulp-sass');
+var postcss      = require('gulp-postcss');
+var cssnano      = require('cssnano');
+var autoprefixer = require('autoprefixer');
 var uglify       = require('gulp-uglify');
 var rollup       = require('gulp-rollup');
 var nodeResolve  = require('rollup-plugin-node-resolve');
@@ -19,13 +22,35 @@ var dir = {
 };
 
 /**
+ * Build CSS
+ */
+gulp.task('css', function() {
+  return gulp.src(dir.src + '/*.scss')
+    .pipe(sass())
+    .pipe(postcss([
+      autoprefixer({
+        browsers: ['last 2 versions'],
+        cascade: false
+      })
+    ]))
+    .pipe(gulp.dest(dir.dist))
+    .pipe(postcss([
+      cssnano({
+        'zindex': false
+      })
+    ]))
+    .pipe(rename({suffix: '.min'}))
+    .pipe(gulp.dest(dir.dist))
+});
+
+/**
  * Build javascript
  */
 gulp.task('js', function() {
   return gulp.src(dir.src + '/**/*.js')
     .pipe(rollup({
       allowRealFiles: true,
-      entry: dir.src + '/jquery.background-parallax-scroll.js',
+      input: dir.src + '/jquery.background-parallax-scroll.js',
       format: 'iife',
       external: ['jquery'],
       globals: {
@@ -35,7 +60,17 @@ gulp.task('js', function() {
         nodeResolve({ jsnext: true }),
         commonjs(),
         babel({
-          presets: ['es2015-rollup'],
+          presets: [
+            [
+              "env", {
+                "modules": false,
+                "targets": {
+                  "browsers": ['last 2 versions']
+                }
+              }
+            ]
+          ],
+          plugins: ['external-helpers'],
           babelrc: false
         })
       ]
@@ -61,6 +96,7 @@ gulp.task('html', function() {
  * Auto Build
  */
 gulp.task('watch', function() {
+  gulp.watch([dir.src + '/**/*.scss'], ['css']);
   gulp.watch([dir.src + '/**/*.js'], ['js']);
   gulp.watch([dir.src + '/**/*.html'], ['html']);
 });
@@ -68,7 +104,7 @@ gulp.task('watch', function() {
 /**
  * Build
  */
-gulp.task('build', ['html', 'js']);
+gulp.task('build', ['html', 'js', 'css']);
 
 /**
  * Browsersync
