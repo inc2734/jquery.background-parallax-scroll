@@ -17,8 +17,6 @@ $ yarn add jquery.background-parallax-scroll
 
 ### Setting
 
-Parallax fire when `background-attachment: fixed`
-
 ```
 <script>
 jQuery(function($) {
@@ -29,11 +27,8 @@ jQuery(function($) {
 </script>
 ```
 ```
-<div class="hero js-bg-parallax">
-  <img src="/path/to/bg.jpg" class="js-bg-parallax__bg" alt="">
-  <div class="js-bg-parallax__content">
-    Contents
-  </div>
+<div class="hero js-bg-parallax" style="background-image: url(/path/to/bg.jpg)">
+  Contents
 </div>
 ```
 

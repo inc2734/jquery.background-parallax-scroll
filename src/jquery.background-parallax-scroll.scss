@@ -1,27 +1,19 @@
 .js-bg-parallax {
-  position: relative;
-  overflow: hidden !important;
+  background-size: cover;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity .1s ease-in;
 
-  &__bg {
-    max-width: none !important;
-    max-height: none !important;
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    z-index: 0;
-    opacity: 0;
-    transition: opacity .1s;
-    object-fit: cover;
-    object-position: 50% 50%;
-
-    &--loaded {
-      height: auto;
-      width: auto;
-      opacity: 1;
-    }
+  &[data-is-loaded="true"] {
+    opacity: 1;
   }
 
-  &__content {
-    position: relative;
+  &[data-is-mobile="true"] {
+    background-attachment: scroll !important;
+  }
+
+  @media (min-width: 1024px) {
+    background-attachment: fixed;
   }
 }
