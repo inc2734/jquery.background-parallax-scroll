@@ -9,8 +9,6 @@
 
 'use strict';
 
-import $ from 'jquery';
-
 ;(($) => {
   $.fn.backgroundParallaxScroll = function(params) {
     params = $.extend({
@@ -18,7 +16,8 @@ import $ from 'jquery';
     }, params);
 
     return this.each((i, e) => {
-      const target = $(e);
+      const target  = $(e);
+      const bgimage = target.children('.js-bg-parallax__bgimage').children('img');
 
       if (isMobile()) {
         target.attr('data-is-mobile', 'true');
@@ -26,26 +25,27 @@ import $ from 'jquery';
         return;
       }
 
-      const urlRegex = /url\(['"]?(.*?)['"]?\)/g;
-      const src      = target.css('background-image').replace(urlRegex, '$1');
-
-      let bpy = 0;
-
-      if (src.match(/\.[^\.\/]+?$/)) {
-        const dummy = new Image();
-        dummy.onload = () => {
-          target.attr('data-is-loaded', 'true');
-        }
-        dummy.src = src;
-      } else {
+      if (! bgimage.length) {
         target.attr('data-is-loaded', 'true');
+        return;
       }
 
-      init();
+      const src = bgimage.attr('src');
+
+      if (! src || ! src.match(/\.[^\.\/]+?$/)) {
+        target.attr('data-is-loaded', 'true');
+        return;
+      }
+
+      const dummy = new Image();
+      dummy.onload = () => {
+        target.attr('data-is-loaded', 'true');
+      }
+      dummy.src = src;
+
       setPosition(0);
 
       $(window).resize(() => {
-        init();
         setPosition($(window).scrollTop());
       });
 
@@ -54,30 +54,17 @@ import $ from 'jquery';
       });
 
       /**
-       * Set background image position
-       *
-       * @return {void}
-       */
-      function init() {
-        target.css('background-position-y', '')
-        bpy = target.css('background-position-y');
-      }
-
-      /**
        * Set background image position for parallax effect
        *
        * @param {int} scroll
        * @return {void}
        */
       function setPosition(scroll) {
-        if ('fixed' !== target.css('background-attachment')) {
-          return;
-        }
-
         const offset   = target.offset().top;
-        const parallax = ((scroll - offset) / params.speed);
+        const parallax = Math.round(((scroll - offset) / params.speed));
 
-        target.css('background-position-y', `calc(${bpy} - ${parallax}px)`);
+        const transform = `translate3d(-50%, calc(-50% + ${parallax}px), 0)`;
+        bgimage.css('transform', transform);
       }
 
       /**

@@ -4,7 +4,7 @@
 
 ### Install
 ```
-$ yarn add jquery.background-parallax-scroll
+$ npm install jquery.background-parallax-scroll
 ```
 
 ### Load scripts
@@ -20,15 +20,20 @@ $ yarn add jquery.background-parallax-scroll
 ```
 <script>
 jQuery(function($) {
-  $('.hero').backgroundParallaxScroll({
+  $('.js-bg-parallax').backgroundParallaxScroll({
     speed: 3 // Optional
   });
 });
 </script>
 ```
 ```
-<div class="hero js-bg-parallax" style="background-image: url(/path/to/bg.jpg)">
-  Contents
+<div class="js-bg-parallax">
+  <div class="js-bg-parallax__bgimage">
+    <img src="/path/to/bg.jpg" alt="">
+  </div>
+  <div class="js-bg-parallax__content">
+    Contents
+  </div>
 </div>
 ```
 

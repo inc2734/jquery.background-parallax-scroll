@@ -11,7 +11,7 @@ var cssnano      = require('cssnano');
 var autoprefixer = require('autoprefixer');
 var uglify       = require('gulp-uglify');
 var rollup       = require('gulp-rollup');
-var nodeResolve  = require('rollup-plugin-node-resolve');
+var resolve      = require('rollup-plugin-node-resolve');
 var commonjs     = require('rollup-plugin-commonjs');
 var babel        = require('rollup-plugin-babel');
 var browserSync  = require('browser-sync');
@@ -49,15 +49,16 @@ gulp.task('css', function() {
 gulp.task('js', function() {
   return gulp.src(dir.src + '/**/*.js')
     .pipe(rollup({
-      allowRealFiles: true,
       input: dir.src + '/jquery.background-parallax-scroll.js',
-      format: 'iife',
-      external: ['jquery'],
-      globals: {
-        jquery: "jQuery"
+      output: {
+        format: 'iife',
+        globals: {
+          jquery: "jQuery"
+        }
       },
+      external: ['jquery'],
       plugins: [
-        nodeResolve({ jsnext: true }),
+        resolve({ jsnext: true }),
         commonjs(),
         babel({
           presets: [

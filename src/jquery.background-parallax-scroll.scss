@@ -1,19 +1,46 @@
 .js-bg-parallax {
-  background-size: cover;
-  background-position: 50% 50%;
-  background-repeat: no-repeat;
+  position: relative;
   opacity: 0;
   transition: opacity .1s ease-in;
+  overflow: hidden;
 
   &[data-is-loaded="true"] {
     opacity: 1;
   }
 
   &[data-is-mobile="true"] {
-    background-attachment: scroll !important;
+    .js-bg-parallax__bgimage {
+      > img {
+        transform: translate(-50%, -50%) !important;
+      }
+    }
   }
 
-  @media (min-width: 1024px) {
-    background-attachment: fixed;
+  &__bgimage {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    > img {
+      position: absolute;
+      width: auto;
+      height: auto;
+      top: 50%;
+      left: 50%;
+      transform: translate3d(-50%, -50%, 0);
+      min-width: 100%;
+      min-height: 100%;
+      will-change: transform;
+
+      @media (max-width: 1023px) {
+        transform: translate(-50%, -50%) !important;
+      }
+    }
+  }
+
+  &__content {
+    position: relative;
   }
 }
