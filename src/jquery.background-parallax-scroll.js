@@ -9,80 +9,89 @@
 
 'use strict';
 
-;(($) => {
-  $.fn.backgroundParallaxScroll = function(params) {
-    params = $.extend({
-      speed: 3
-    }, params);
+import $ from 'jquery';
 
-    return this.each((i, e) => {
-      const target  = $(e);
-      const bgimage = target.children('.js-bg-parallax__bgimage').children('img');
+$.fn.backgroundParallaxScroll = function(params) {
+  params = $.extend({
+    speed: 3
+  }, params);
 
-      if (isMobile()) {
-        target.attr('data-is-mobile', 'true');
-        target.attr('data-is-loaded', 'true');
-        return;
-      }
+  return this.each((i, e) => {
+    const target  = $(e);
+    const bgimage = target.children('.js-bg-parallax__bgimage').children('img');
 
-      if (! bgimage.length) {
-        target.attr('data-is-loaded', 'true');
-        return;
-      }
+    if (isMobile()) {
+      target.attr('data-is-mobile', 'true');
+      target.attr('data-is-loaded', 'true');
+      return;
+    }
 
-      const src = bgimage.attr('src');
+    if (! bgimage.length) {
+      target.attr('data-is-loaded', 'true');
+      return;
+    }
 
-      if (! src || ! src.match(/\.[^\.\/]+?$/)) {
-        target.attr('data-is-loaded', 'true');
-        return;
-      }
+    const src = bgimage.attr('src');
 
-      const dummy = new Image();
-      dummy.onload = () => {
-        target.attr('data-is-loaded', 'true');
-      }
-      dummy.src = src;
+    if (! src || ! src.match(/\.[^\.\/]+?$/)) {
+      target.attr('data-is-loaded', 'true');
+      return;
+    }
 
-      setPosition(0);
+    const dummy = new Image();
+    dummy.onload = () => {
+      target.attr('data-is-loaded', 'true');
+    }
+    dummy.src = src;
 
-      $(window).resize(() => {
-        setPosition($(window).scrollTop());
-      });
+    setPosition(0);
 
-      $(window).scroll(() => {
-        setPosition($(window).scrollTop());
-      });
-
-      /**
-       * Set background image position for parallax effect
-       *
-       * @param {int} scroll
-       * @return {void}
-       */
-      function setPosition(scroll) {
-        const offset   = target.offset().top;
-        const parallax = Math.round(((scroll - offset) / params.speed));
-
-        const transform = `translate3d(-50%, calc(-50% + ${parallax}px), 0)`;
-        bgimage.css('transform', transform);
-      }
-
-      /**
-       * Return true when mobile device
-       *
-       * @return {Boolean}
-       */
-      function isMobile() {
-        const ua = navigator.userAgent;
-
-        if (0 < ua.indexOf('iPhone') || 0 < ua.indexOf('iPod') || 0 < ua.indexOf('Android') && 0 < ua.indexOf('Mobile')) {
-          return true;
-        } else if (0 < ua.indexOf('iPad')) {
-          return true;
-        }
-
-        return false;
-      }
+    $(window).resize(() => {
+      setPosition($(window).scrollTop());
     });
-  }
-})(jQuery);
+
+    $(window).scroll(() => {
+      setPosition($(window).scrollTop());
+    });
+
+    /**
+     * Set background image position for parallax effect
+     *
+     * @param {int} scroll
+     * @return {void}
+     */
+    function setPosition(scroll) {
+      const offset   = target.offset().top;
+      const parallax = Math.round(((scroll - offset) / params.speed));
+
+      const targetHeight  = bgimage.parent().outerHeight();
+      const bgimageHeight = bgimage.outerHeight();
+
+      if (offset + targetHeight <= scroll + $(window).height()) {
+        if ((bgimageHeight - targetHeight) / 2 <= Math.abs(parallax)) {
+          return;
+        }
+      }
+
+      const transform = `translate3d(-50%, calc(-50% + ${parallax}px), 0)`;
+      bgimage.css('transform', transform);
+    }
+
+    /**
+     * Return true when mobile device
+     *
+     * @return {Boolean}
+     */
+    function isMobile() {
+      const ua = navigator.userAgent;
+
+      if (0 < ua.indexOf('iPhone') || 0 < ua.indexOf('iPod') || 0 < ua.indexOf('Android') && 0 < ua.indexOf('Mobile')) {
+        return true;
+      } else if (0 < ua.indexOf('iPad')) {
+        return true;
+      }
+
+      return false;
+    }
+  });
+};
