@@ -73,8 +73,15 @@ $.fn.backgroundParallaxScroll = function(params) {
         }
       }
 
-      const transform = `translate3d(-50%, calc(-50% + ${parallax}px), 0)`;
-      bgimage.css('transform', transform);
+      if (window.matchMedia('(max-width: 1023px)').matches) {
+        bgimage.css('transform', '');
+      } else {
+        if ('cover' === bgimage.css('objec-fit')) {
+          bgimage.css('transform', `translate3d(-50%, calc(-50% + ${parallax}px), 0)`);
+        } else {
+          bgimage.css('transform', `translate3d(0, ${parallax}px, 0)`);
+        }
+      }
     }
 
     /**

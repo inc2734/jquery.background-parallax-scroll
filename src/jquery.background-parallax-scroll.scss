@@ -9,11 +9,6 @@
   }
 
   &[data-is-mobile="true"] {
-    .js-bg-parallax__bgimage {
-      > img {
-        transform: translate(-50%, -50%) !important;
-      }
-    }
   }
 
   &__bgimage {
@@ -33,9 +28,24 @@
       min-width: 100%;
       min-height: 100%;
       will-change: transform;
+      max-width: none;
+      max-height: none;
 
       @media (max-width: 1023px) {
-        transform: translate(-50%, -50%) !important;
+        transform: translate(-50%, -50%);
+      }
+
+      @supports (object-fit: cover) {
+        object-fit: cover;
+        transform: none;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+
+        @media (max-width: 1023px) {
+          transform: none;
+        }
       }
     }
   }
