@@ -13,7 +13,7 @@ import $ from 'jquery';
 
 $.fn.backgroundParallaxScroll = function(params) {
   params = $.extend({
-    speed: 3
+    speed: 5
   }, params);
 
   return this.each((i, e) => {
@@ -40,16 +40,22 @@ $.fn.backgroundParallaxScroll = function(params) {
 
     const dummy = new Image();
     dummy.onload = () => {
-      target.attr('data-is-loaded', 'true');
       setPosition(0);
+      target.attr('data-is-loaded', 'true');
 
-      $(window).resize(() => {
-        setPosition($(window).scrollTop());
-      });
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        if (resizeTimer !== false) {
+          clearTimeout(resizeTimer);
+        }
+        resizeTimer = setTimeout(function () {
+          setPosition(getScrollTop());
+        }, 50);
+      }, false);
 
-      $(window).scroll(() => {
-        setPosition($(window).scrollTop());
-      });
+      window.addEventListener('scroll', () => {
+        setPosition(getScrollTop());
+      }, false);
     }
     dummy.src = src;
 
@@ -68,28 +74,12 @@ $.fn.backgroundParallaxScroll = function(params) {
     }
 
     /**
-     * Return height of background image
-     *
-     * @return {int}
-     */
-    function getBackGroundImageHeight() {
-      if (objectFitSupported()) {
-        return bgimage.outerWidth() / dummy.width * dummy.height;
-      }
-      return bgimage.outerHeight();
-    }
-
-    /**
      * Reset background image position
      *
      * @type {void}
      */
     function resetImagePosition() {
-      if (objectFitSupported()) {
-        bgimage.css('object-position', '');
-      } else {
-        bgimage.css('transform', '');
-      }
+      bgimage.get(0).style.transform = '';
     }
 
     /**
@@ -99,9 +89,9 @@ $.fn.backgroundParallaxScroll = function(params) {
      */
     function setImagePosition(scroll) {
       const offset        = target.offset().top;
-      const parallax      = Math.round(((scroll - offset) / params.speed));
+      const parallax      = Math.round((scroll - offset) / params.speed);
       const targetHeight  = bgimage.parent().outerHeight();
-      const bgimageHeight = getBackGroundImageHeight();
+      const bgimageHeight = bgimage.outerHeight();
 
       if (offset + targetHeight <= scroll + $(window).height()) {
         if ((bgimageHeight - targetHeight) / 2 <= Math.abs(parallax)) {
@@ -109,23 +99,16 @@ $.fn.backgroundParallaxScroll = function(params) {
         }
       }
 
-      if (objectFitSupported()) {
-        bgimage.css('object-position', `50% calc(50% + ${parallax}px)`);
-      } else {
-        bgimage.css('transform', `translate3d(0, calc(-50% + ${parallax}px), 0)`);
-      }
+      bgimage.get(0).style.transform = `translate3d(0, calc(-50% + ${parallax}px), 0)`;
     }
 
     /**
-     * Whether supported object-fit
-
-     * @return {boolean}
+     * Return scrolled distance
+     *
+     * @return {int}
      */
-    function objectFitSupported() {
-      if ('cover' === bgimage.css('object-fit')) {
-        return true;
-      }
-      return false;
+    function getScrollTop() {
+      return document.documentElement.scrollTop || document.body.scrollTop;
     }
 
     /**
