@@ -88,15 +88,24 @@ $.fn.backgroundParallaxScroll = function(params) {
      * @type {void}
      */
     function setImagePosition(scroll) {
-      const offset        = target.offset().top;
-      const parallax      = Math.round((scroll - offset) / params.speed);
+      const targetOffset  = target.offset().top;
       const targetHeight  = bgimage.parent().outerHeight();
+      const bgimageOffset = bgimage.offset().top;
       const bgimageHeight = bgimage.outerHeight();
+      const parallax      = Math.round((scroll - targetOffset + (($(window).height() - targetHeight) / 2)) / params.speed);
 
-      if (offset + targetHeight <= scroll + $(window).height()) {
-        if ((bgimageHeight - targetHeight) / 2 <= Math.abs(parallax)) {
-          return;
-        }
+      // The target is under the window
+      if (targetOffset - $(window).height() >= scroll) {
+        return;
+      }
+
+      // The target is above the window
+      if (targetOffset + targetHeight <= scroll) {
+        return;
+      }
+
+      if ((bgimageHeight - targetHeight) / 2 <= Math.abs(parallax)) {
+        return;
       }
 
       bgimage.get(0).style.transform = `translate3d(0, calc(-50% + ${parallax}px), 0)`;
