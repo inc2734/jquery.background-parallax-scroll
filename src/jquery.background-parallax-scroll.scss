@@ -1,11 +1,9 @@
 .js-bg-parallax {
   position: relative;
-  opacity: 0;
   transition: opacity .1s ease-in;
   overflow: hidden;
 
   &[data-is-loaded="true"] {
-    opacity: 1;
   }
 
   &[data-is-mobile="true"] {
